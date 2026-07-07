@@ -44,7 +44,7 @@ export function SiteNav() {
           paddingInline: "var(--gutter)",
         }}
       >
-        <Logo height={32} priority />
+        <Logo heightClass="h-10 md:h-12" height={48} priority />
 
         <div className="flex items-center gap-1">
           {/* Desktop links */}

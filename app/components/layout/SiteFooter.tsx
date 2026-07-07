@@ -12,7 +12,7 @@ export function SiteFooter() {
       <Container className="py-14 md:py-16">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
-            <Logo height={40} surface="onDark" asStatic />
+            <Logo heightClass="h-12 md:h-14" height={56} surface="onDark" asStatic />
             <p className="mt-5 font-display text-lg font-medium tracking-[var(--tracking-heading)] text-text-on-inverse">
               {brand.tagline}
             </p>

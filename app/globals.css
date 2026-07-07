@@ -258,51 +258,9 @@
   }
 }
 
-@keyframes ss-flow-dash {
-  to {
-    stroke-dashoffset: -24;
-  }
-}
-
-/* ---- Marquee ---- */
-@keyframes ss-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.ss-marquee-track {
-  animation: ss-marquee var(--marquee-duration) linear infinite;
-}
-
-.ss-marquee-mask {
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 9%,
-    #000 91%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 9%,
-    #000 91%,
-    transparent
-  );
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .ss-marquee-track {
-    animation: none;
-    flex-wrap: wrap;
-    justify-content: center;
   }
   .ss-enter {
     opacity: 1;

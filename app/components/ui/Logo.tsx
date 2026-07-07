@@ -10,8 +10,14 @@ const DARK_SRC = "/black-bg.png"; // light art - use on dark surfaces
 const DARK_RATIO = 363 / 178;
 
 type LogoProps = {
-  /** Rendered mark height in px. Width derives per-file from its aspect ratio. */
+  /** Rendered mark height in px (fallback / intrinsic sizing when no heightClass). */
   height?: number;
+  /**
+   * Optional Tailwind height utilities for responsive sizing, e.g. "h-9 md:h-11".
+   * When set, it drives the displayed height and `height` is used only for the
+   * intrinsic aspect ratio.
+   */
+  heightClass?: string;
   /**
    * Which surface the logo sits on:
    *  - "adaptive": light surface in light theme, dark surface in dark theme
@@ -29,12 +35,14 @@ function Mark({
   src,
   ratio,
   height,
+  heightClass,
   priority,
   className,
 }: {
   src: string;
   ratio: number;
   height: number;
+  heightClass?: string;
   priority?: boolean;
   className?: string;
 }) {
@@ -45,14 +53,15 @@ function Mark({
       width={Math.round(height * ratio)}
       height={height}
       priority={priority}
-      className={className}
-      style={{ height, width: "auto" }}
+      className={cn(heightClass ? `${heightClass} w-auto` : "", className)}
+      style={heightClass ? undefined : { height, width: "auto" }}
     />
   );
 }
 
 export function Logo({
   height = 34,
+  heightClass,
   surface = "adaptive",
   priority = false,
   className,
@@ -60,13 +69,20 @@ export function Logo({
 }: LogoProps) {
   const inner =
     surface === "onDark" ? (
-      <Mark src={DARK_SRC} ratio={DARK_RATIO} height={height} priority={priority} />
+      <Mark
+        src={DARK_SRC}
+        ratio={DARK_RATIO}
+        height={height}
+        heightClass={heightClass}
+        priority={priority}
+      />
     ) : (
       <>
         <Mark
           src={LIGHT_SRC}
           ratio={LIGHT_RATIO}
           height={height}
+          heightClass={heightClass}
           priority={priority}
           className="block dark:hidden"
         />
@@ -74,6 +90,7 @@ export function Logo({
           src={DARK_SRC}
           ratio={DARK_RATIO}
           height={height}
+          heightClass={heightClass}
           priority={priority}
           className="hidden dark:block"
         />

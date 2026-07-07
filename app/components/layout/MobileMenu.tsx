@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { navLinks, ctaLink } from "@/app/content/site";
 import { Logo } from "@/app/components/ui/Logo";
@@ -17,6 +18,13 @@ type MobileMenuProps = {
 export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Portal target only exists on the client.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Esc to close, focus trap, scroll lock while open.
   useEffect(() => {
@@ -55,11 +63,13 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
     };
   }, [open, onClose]);
 
-  return (
+  if (!mounted) return null;
+
+  const overlay = (
     <div
       aria-hidden={!open}
       className={cn(
-        "fixed inset-0 overflow-hidden md:hidden",
+        "fixed inset-0 md:hidden",
         open ? "pointer-events-auto" : "pointer-events-none",
       )}
       style={{ zIndex: "var(--z-modal)" }}
@@ -81,14 +91,14 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
         aria-modal="true"
         aria-label="Site menu"
         className={cn(
-          "absolute inset-y-0 right-0 flex w-[min(21rem,88vw)] flex-col",
+          "absolute inset-y-0 right-0 flex h-full w-[min(21rem,88vw)] flex-col",
           "bg-bg-elevated shadow-[var(--shadow-lg)]",
           "transition-transform duration-[var(--dur-base)] ease-[var(--ease-out)]",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <Logo height={28} surface="adaptive" asStatic />
+          <Logo height={34} surface="adaptive" asStatic />
           <button
             ref={closeRef}
             type="button"
@@ -145,4 +155,6 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
       </div>
     </div>
   );
+
+  return createPortal(overlay, document.body);
 }
