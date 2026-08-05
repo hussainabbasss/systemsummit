@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { validateWebsiteRequest, type FormState } from "@/lib/validation";
 import { persistLead } from "@/lib/leads";
 
@@ -28,7 +29,12 @@ export async function submitWebsiteRequest(
   }
 
   try {
-    await persistLead(result.value);
+    const h = await headers();
+    await persistLead(result.value, {
+      sourcePath: "/get-a-website",
+      referrer: h.get("referer"),
+      userAgent: h.get("user-agent"),
+    });
   } catch {
     return {
       status: "error",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useId, useRef, useState } from "react";
-import { submitWebsiteRequest } from "@/app/get-a-website/actions";
+import { submitWebsiteRequest } from "@/app/(site)/get-a-website/actions";
 import {
   validateField,
   type FieldErrors,

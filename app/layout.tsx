@@ -3,9 +3,6 @@ import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { themeBootScript } from "@/lib/theme";
 import { brand } from "@/app/content/site";
-import { SiteNav } from "@/app/components/layout/SiteNav";
-import { SiteFooter } from "@/app/components/layout/SiteFooter";
-import { SkipLink } from "@/app/components/layout/SkipLink";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -43,6 +40,10 @@ export const metadata: Metadata = {
     siteName: brand.name,
   },
   twitter: { card: "summary_large_image" },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {
@@ -64,14 +65,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
-      <body className="min-h-full flex flex-col bg-bg text-text">
-        <SkipLink />
-        <SiteNav />
-        <main id="content" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
-      </body>
+      <body className="min-h-full flex flex-col bg-bg text-text">{children}</body>
     </html>
   );
 }

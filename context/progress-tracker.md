@@ -2,7 +2,7 @@
 
 Legend: ⬜ not started · 🟡 in progress · ✅ done · ⚠️ blocked/needs decision
 
-**Current state:** Phases 0–5 built and verified. App type-checks, lints, and builds clean; all 4 routes prerender static. Verified in browser (both themes, mobile + desktop, keyboard, form E2E). Next: Phase 6 — /impeccable elevation pass.
+**Current state:** Phases 0–6 complete. Admin panel (Supabase) built: lead persistence, page-view tracking, allowlisted auth, `/admin` overview + leads triage. Build/lint/tsc green.
 
 ---
 
@@ -62,6 +62,16 @@ Legend: ⬜ not started · 🟡 in progress · ✅ done · ⚠️ blocked/needs 
 - ✅ Fixed findings (see log); no follow-up command needed — refinement, not rescue
 - ✅ Context corrections noted (ui-tokens.md updated for the two token changes)
 - ✅ Final summary presented
+
+## Phase 7 — Admin panel + Supabase ✅
+- ✅ `supabase/schema.sql` — `leads` + `page_views` with RLS (secret-key only)
+- ✅ `@supabase/supabase-js` + `@supabase/ssr`; `lib/supabase/*` clients
+- ✅ `persistLead()` writes to Supabase; form captures attribution headers
+- ✅ `POST /api/track` + `PageViewTracker` on marketing layout
+- ✅ `/admin` auth (email/password + `ADMIN_EMAILS` allowlist) via Next 16 `proxy.ts`
+- ✅ Admin overview (lead counts + traffic) and leads triage (`new`/`contacted`/`archived`)
+- ✅ Marketing chrome moved under `app/(site)`; admin has its own layout
+- ✅ Plan: `context/admin-panel.md`
 
 ---
 

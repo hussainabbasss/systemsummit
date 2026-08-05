@@ -34,8 +34,8 @@ Status: ⬜ not started · 🟡 in progress · ✅ built
 |---|---|---|---|---|
 | `Hero` | `components/marketing/Hero.tsx` | Home hero: headline "Get a website for your MUN" + primary CTA | server | ✅ |
 | `HeroMotif` | `components/marketing/HeroMotif.tsx` | Decorative logo-derived mountain/river "S" line-work, both themes | server | ✅ |
-| `LogoMarquee` | `components/marketing/LogoMarquee.tsx` | Auto-scrolling MUN partner row, CSS loop, reduced-motion safe | client (minimal) | ✅ |
-| `MunLogo` | `components/marketing/MunLogo.tsx` | Single placeholder MUN wordmark/crest SVG, muted-tinted | server | ✅ |
+| `LogoMarquee` | (removed) | Auto-scrolling MUN partner row — removed from Home per client request | — | ➖ |
+| `MunLogo` | (removed) | Was used only by LogoMarquee — removed with it | — | ➖ |
 | `OfferingList` | `components/marketing/OfferingList.tsx` | The four offerings, non-uniform layout (engine emphasized) | server | ✅ |
 | `AllotmentEngineDiagram` | `components/marketing/AllotmentEngineDiagram.tsx` | SVG: inputs → engine → EB reviews & issues (human-in-loop) | server | ✅ |
 | `CtaBand` | `components/marketing/CtaBand.tsx` | Closing navy band w/ single accent CTA to form | server | ✅ |
@@ -50,6 +50,16 @@ Status: ⬜ not started · 🟡 in progress · ✅ built
 | `FormSuccess` | `components/forms/FormSuccess.tsx` | Calm success panel replacing the form | server | ✅ |
 | `submitWebsiteRequest` | `app/get-a-website/actions.ts` | `"use server"` action: validate → persist → FormState | server | ✅ |
 
+## Admin (internal ops)
+| Component | Path | Purpose | Client? | Status |
+|---|---|---|---|---|
+| `AdminLayout` | `app/admin/layout.tsx` | Admin chrome (no public nav/footer) | server | ✅ |
+| `AdminNav` | `components/admin/AdminNav.tsx` | Overview / Leads nav | client | ✅ |
+| `LoginForm` | `components/admin/LoginForm.tsx` | Email/password sign-in | client | ✅ |
+| `LogoutButton` | `components/admin/LogoutButton.tsx` | Sign-out form | client | ✅ |
+| `LeadStatusForm` | `components/admin/LeadStatusForm.tsx` | Triage status update | client | ✅ |
+| `PageViewTracker` | `components/analytics/PageViewTracker.tsx` | Marketing page-view beacon | client | ✅ |
+
 ## Content & lib (not components, tracked for reuse)
 | Module | Path | Purpose | Status |
 |---|---|---|---|
@@ -57,7 +67,10 @@ Status: ⬜ not started · 🟡 in progress · ✅ built
 | `offerings` | `app/content/offerings.ts` | Four offerings data | ✅ |
 | `muns` | `app/content/muns.ts` | Placeholder MUN names for marquee | ✅ |
 | `validation` | `lib/validation.ts` | Shared client/server form validators + types | ✅ |
-| `leads` | `lib/leads.ts` | `persistLead()` stubbed integration seam | ✅ |
+| `leads` | `lib/leads.ts` | `persistLead()` → Supabase `leads` | ✅ |
+| `analytics` | `lib/analytics.ts` | page_views write + traffic summary | ✅ |
+| `admin-auth` | `lib/admin-auth.ts` | Allowlisted session helpers | ✅ |
+| `supabase/*` | `lib/supabase/` | Auth + service-role clients | ✅ |
 | `cn` | `lib/cn.ts` | className joiner | ✅ |
 
 ## Rules for this registry

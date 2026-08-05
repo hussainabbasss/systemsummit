@@ -65,7 +65,6 @@
   --dur-fast: 140ms;
   --dur-base: 240ms;
   --dur-slow: 480ms;
-  --marquee-duration: 42s;
 
   /* ---- Layout ---- */
   --gutter: clamp(1.25rem, 5vw, 2rem);

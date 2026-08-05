@@ -6,45 +6,52 @@
 - **TypeScript 5** — `strict: true`, path alias `@/*` → project root.
 - **Tailwind CSS v4** — configured via `@import "tailwindcss"` in `app/globals.css` and the `@tailwindcss/postcss` plugin. **No `tailwind.config.js`** — theme is expressed through CSS `@theme` + custom properties (see `ui-tokens.md`). Tailwind v4 is CSS-first.
 - **Fonts:** `next/font/google` — Sora + Inter, exposed as CSS variables on `<html>`.
-- **No** database, ORM, auth, state library, component library, or animation library in this build. Motion is CSS + one small IntersectionObserver hook.
+- **Supabase** — Postgres (`leads`, `page_views`) + Auth for the internal `/admin` console. Server-only service-role client for data; cookie SSR auth via `@supabase/ssr`. Motion remains CSS + one small IntersectionObserver hook.
 
 ## Folder structure
 ```
 app/
-  layout.tsx              # Root layout: fonts, <ThemeProvider> boot script, Nav + Footer, metadata
+  layout.tsx              # Root: fonts, theme boot script, metadata (no nav/footer)
   globals.css             # Tailwind import + @theme tokens + base layer (see ui-tokens.md)
-  page.tsx                # Home (/)
-  about/page.tsx          # About (/about)
-  get-a-website/
-    page.tsx              # Get a Website (/get-a-website) — renders <GetWebsiteForm>
-    actions.ts            # "use server" — submitWebsiteRequest server action + validation
+  (site)/
+    layout.tsx            # Marketing chrome: Nav + Footer + PageViewTracker
+    page.tsx              # Home (/)
+    about/page.tsx        # About (/about)
+    get-a-website/
+      page.tsx            # Get a Website — renders <GetWebsiteForm>
+      actions.ts          # submitWebsiteRequest → persistLead
+  admin/
+    layout.tsx            # Admin chrome (no public nav/footer)
+    page.tsx              # Overview dashboard
+    login/                # Sign-in
+    leads/                # Lead triage
+  api/track/route.ts      # POST page-view beacon
   components/
     layout/               # SiteNav, SiteFooter, MobileMenu, Container, Section, ThemeToggle
-    ui/                   # Button, Field, Input, Logo, Reveal, Badge (built as needed)
-    marketing/            # Hero, LogoMarquee, OfferingList, AllotmentEngineDiagram, CtaBand
-    forms/                # GetWebsiteForm (client), form field primitives
-  content/
-    site.ts               # Nav links, footer links, contact/SLA copy, brand strings
-    offerings.ts          # The four offerings (title, blurb, icon key)
-    muns.ts               # Placeholder MUN names for the marquee
-  lib/
-    theme.ts              # Theme constants, storage key, inline boot script string
-    validation.ts         # Zod-free hand-rolled validators for the form (shared client/server)
-    leads.ts              # persistLead() — the single stubbed integration point
-    cn.ts                 # className joiner helper
-    useReveal.ts          # "use client" IntersectionObserver reveal hook
-public/
-  logo.png                # Provided brand logo (nav + footer)
-context/                  # These nine spec files
+    ui/                   # Button, Field, Input, Logo, Reveal
+    marketing/            # Hero, OfferingList, AllotmentEngineDiagram, CtaBand, …
+    forms/                # GetWebsiteForm, FormSuccess
+    admin/                # AdminNav, LoginForm, LeadStatusForm, LogoutButton
+    analytics/            # PageViewTracker
+  content/                # site.ts, offerings.ts, muns.ts
+lib/
+  supabase/               # env, server (auth cookies), admin (service role)
+  admin-auth.ts           # allowlist + requireAdmin
+  leads.ts / analytics.ts # Supabase data access
+  validation.ts, theme.ts, cn.ts, useReveal.ts
+proxy.ts                  # Next 16 proxy: refresh auth + guard /admin
+supabase/schema.sql       # leads + page_views DDL
+public/logo.png
+context/                  # Spec + admin-panel plan
 ```
-> Create folders as features need them (per `build-plan.md`); do not pre-create empty dirs.
 
 ## System boundaries & data-flow rules
-- **Server Components fetch/compose; Client Components handle interaction.** Default to server. Add `"use client"` only for: ThemeToggle, MobileMenu, GetWebsiteForm, Reveal hook, LogoMarquee (if it needs JS — prefer pure CSS).
-- **The form is the only data mutation.** Flow: `GetWebsiteForm` (client, `useActionState`) → `submitWebsiteRequest` server action in `get-a-website/actions.ts` → validates with `lib/validation.ts` → calls `lib/leads.ts#persistLead()` → returns a typed `FormState`.
-- **`persistLead()` is the one integration seam.** In this build it validates shape and resolves success (optionally `console.log`s server-side). A `// TODO(backend):` comment marks exactly where real email/DB/webhook goes. Nothing else in the app knows how leads are stored.
-- **No component reads env/secrets or does I/O directly.** Any future secret is read only inside `lib/leads.ts` on the server.
-- **Content is data, not markup.** Nav items, offerings, MUN names, and reusable brand copy live in `app/content/*` as typed exports — components map over them. No hard-coded lists inside JSX.
+- **Server Components fetch/compose; Client Components handle interaction.** Default to server.
+- **Lead capture:** `GetWebsiteForm` → `submitWebsiteRequest` → `lib/validation.ts` → `lib/leads.ts#persistLead()` (Supabase service role) → `FormState`.
+- **Analytics:** `PageViewTracker` → `POST /api/track` → `lib/analytics.ts#recordPageView` (skips `/admin`).
+- **Admin auth:** Supabase email/password + `ADMIN_EMAILS` allowlist; `proxy.ts` refreshes cookies and redirects unauthenticated `/admin` traffic to `/admin/login`.
+- **Secrets stay server-side.** Publishable key used only in server/proxy auth clients; secret key only in `lib/supabase/admin.ts`.
+- **Content is data, not markup.** Nav items, offerings, MUN names live in `app/content/*`.
 
 ## Architectural constraints (guardrails)
 - Server Actions contain **no JSX / no UI logic** — only validate → persist → return state.
