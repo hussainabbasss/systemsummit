@@ -14,6 +14,8 @@ export async function createAuthClient() {
 
   return createServerClient(getSupabaseUrl(), getSupabasePublishableKey(), {
     cookies: {
+      // Keep cookies small — full user JSON in cookies easily triggers 431.
+      encode: "tokens-only",
       getAll() {
         return cookieStore.getAll();
       },

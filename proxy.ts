@@ -18,6 +18,8 @@ export async function proxy(request: NextRequest) {
     getSupabasePublishableKey(),
     {
       cookies: {
+        // Tokens only — avoids 431 from oversized auth cookies on localhost.
+        encode: "tokens-only",
         getAll() {
           return request.cookies.getAll();
         },
