@@ -23,6 +23,7 @@ export type NavLink = { label: string; href: string };
 
 export const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
 ];
 
@@ -30,6 +31,7 @@ export const ctaLink = { label: "Get a Website", href: "/get-a-website" } as con
 
 export const footerLinks: NavLink[] = [
   { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
   { label: "Get a Website", href: "/get-a-website" },
 ];

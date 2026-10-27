@@ -42,6 +42,8 @@ Status: ⬜ not started · 🟡 in progress · ✅ built
 | `MissionNarrative` | `components/marketing/MissionNarrative.tsx` | About: mission-led prose blocks (not cards) | server | ✅ |
 | `SpecializationPoints` | `components/marketing/SpecializationPoints.tsx` | About: "specialization as strength" content | server | ✅ |
 | `NiqBrandsSection` | `components/marketing/NiqBrandsSection.tsx` | About: parent-company (NiqBrands) belief + mark | server | ✅ |
+| `ProjectShowcase` | `components/marketing/ProjectShowcase.tsx` | One live project: browser-framed screenshot + story, alternating sides | server | ✅ |
+| `ProjectsSection` | `components/marketing/ProjectsSection.tsx` | Home: live projects band, links to /projects | server | ✅ |
 
 ## Forms (Get a Website)
 | Component | Path | Purpose | Client? | Status |
@@ -65,6 +67,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ built
 |---|---|---|---|
 | `site` | `app/content/site.ts` | Nav/footer links, brand strings, SLA copy | ✅ |
 | `offerings` | `app/content/offerings.ts` | Four offerings data | ✅ |
+| `projects` | `app/content/projects.ts` | Live client projects (screenshots in `public/projects`) | ✅ |
 | `muns` | `app/content/muns.ts` | Placeholder MUN names for marquee | ✅ |
 | `validation` | `lib/validation.ts` | Shared client/server form validators + types | ✅ |
 | `leads` | `lib/leads.ts` | `persistLead()` → Supabase `leads` | ✅ |
