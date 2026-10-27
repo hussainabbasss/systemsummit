@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/app/components/layout/Container";
 import { GetWebsiteForm } from "@/app/components/forms/GetWebsiteForm";
 import { CheckIcon } from "@/app/components/ui/icons";
+import { ContactVisitTracker } from "@/app/components/analytics/ContactVisitTracker";
 
 export const metadata: Metadata = {
   title: "Get a Website",
@@ -19,6 +20,7 @@ const assurances = [
 export default function GetAWebsitePage() {
   return (
     <Container className="pb-20 pt-14 md:pb-28 md:pt-20">
+      <ContactVisitTracker />
       <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
         {/* Value / trust column */}
         <div className="lg:pt-4">

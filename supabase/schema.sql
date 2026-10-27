@@ -58,3 +58,29 @@ create index if not exists page_views_visitor_id_idx on public.page_views (visit
 -- -------------------------------------------------------------------
 alter table public.leads enable row level security;
 alter table public.page_views enable row level security;
+
+-- -------------------------------------------------------------------
+-- contact_visits — one row per open of the Get a Website (contact) page,
+-- written by /api/track/contact. Unlike page_views this DOES store the
+-- client IP and geo, so treat it as personal data.
+-- -------------------------------------------------------------------
+create table if not exists public.contact_visits (
+  id          bigint generated always as identity primary key,
+  created_at  timestamptz not null default now(),
+  path        text not null,
+  query       text,
+  referrer    text,
+  utm         jsonb,
+  visitor_id  uuid,
+  session_id  uuid,
+  ip          text,
+  geo         jsonb,
+  user_agent  text,
+  accept_language text,
+  -- Browser-reported context (languages, timezone, screen, device hints).
+  client      jsonb
+);
+
+create index if not exists contact_visits_created_at_idx on public.contact_visits (created_at desc);
+
+alter table public.contact_visits enable row level security;
